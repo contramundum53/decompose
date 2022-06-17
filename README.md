@@ -39,3 +39,12 @@ int main(){
 ```
 
 You can override the behavior of `decompose` either by specializing both `std::tuple_size` and `std::tuple_element` or by specializing `decompose::decompose_traits`.
+
+# Limitation
+By default, this library uses structured binding for decomposing a struct. A struct is decomposable only if it can be decomposed by structured binding, i.e.,
+* it has no private/protected members,
+* all its members are in the same class (either the struct itself or one of its base class), and
+* it has no member of anonymous union type.
+Due to implementation issues, there is an additional limitation that
+* the struct cannot have more than 50 members.
+Note that this limitation can be lifted by modifying `max_n` constant in `include/decompose/generate_decompose_with_structured_binding.py` and re-running the script to generate `include/decompose/decompose_with_structured_binding.hpp`.
