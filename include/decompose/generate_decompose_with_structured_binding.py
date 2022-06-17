@@ -9,10 +9,6 @@ script_name = "include/decompose/" + pathlib.Path(__file__).name
 def generate(n):
     var_list = ", ".join(f"_{i}" for i in range(n))
     fwd_list = ", ".join(f"std::forward<decltype(_{i})>(_{i})" for i in range(n))
-    # return "if constexpr(requires{ ({auto&& [" + var_list + "] = std::forward<T>(t);}); }) {\n" + \
-    #     "        auto&& [" + var_list + "] = std::forward<T>(t);\n" + \
-    #     "        return std::forward<F>(f)(" + fwd_list + ");\n" + \
-    #     "    } else "
     return f"    auto c{n} = " + "[](auto&& t) -> decltype(({\n" + \
             f"                auto&& [{var_list}] = std::forward<decltype(t)>(t);\n" + \
             f"                std::integral_constant<int, {n}>();\n" + \
