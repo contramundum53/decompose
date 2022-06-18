@@ -1,7 +1,7 @@
 #pragma once
 
 #if !__has_include(<cereal/cereal.hpp>)
-#error "cereal_integration.hpp requires cereal/cereal.hpp"
+#error "integration/cereal.hpp requires cereal/cereal.hpp"
 #endif
 #include <cereal/cereal.hpp>
 
