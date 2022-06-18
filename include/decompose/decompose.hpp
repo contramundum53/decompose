@@ -5,21 +5,25 @@
 #include <tuple>
 #include <concepts>
 
-#include "decompose_with_structured_binding.hpp"
+#include "detail/util.hpp"
+#include "detail/decompose_with_structured_binding.hpp"
 
 namespace decompose{
 
 template<class T>
-struct decompose_traits{
-    template<class U, class F> requires std::same_as<std::decay_t<U>, T>
-    static constexpr decltype(auto) decompose(U&& u, F&& f){
-        return decompose_with_structured_binding(std::forward<U>(u), std::forward<F>(f));
-    }
-};
+struct decompose_traits;
+
+template<class T>
+concept decomposable = detail::is_complete<decompose_traits<T>> || detail::decomposable_with_structured_binding<T>;
 
 template<class T, class F>
 constexpr decltype(auto) decompose(T&& t, F&& f){
-    return decompose_traits<std::decay_t<T>>::decompose(std::forward<T>(t), std::forward<F>(f));
+    using traits = decompose_traits<std::decay_t<T>>;
+    if constexpr (detail::is_complete<traits>){
+        return traits::decompose(std::forward<T>(t), std::forward<F>(f));
+    } else{
+        return detail::decompose_with_structured_binding(std::forward<T>(t), std::forward<F>(f));
+    }
 }
 
 }
